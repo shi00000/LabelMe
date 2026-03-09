@@ -11,11 +11,8 @@ document.addEventListener('DOMContentLoaded', () => {
             'restart_btn': 'もう一度試す',
             'nickname_alert': 'ニックネームを入力してください。',
             'nickname_alert_alphabet': 'ニックネームは半角アルファベットで入力してください。',
-            // ▼▼▼ 追加 ▼▼▼
             'print_wait_text': '印刷完了までお待ちください',
-            // ▲▲▲
             'questions': [
-                // (質問は変更なし)
                 {"text": "あなたは計画を立ててから\n行動する方ですか？", "type": "personality", "yes_text": "はい", "no_text": "いいえ"},
                 {"text": "活気ある社交の場よりも、\n静かな一人の時間を好みますか？", "type": "personality", "yes_text": "はい", "no_text": "いいえ"},
                 {"text": "注目を浴びるよりも\n陰で支える方が好きですか？", "type": "personality", "yes_text": "はい", "no_text": "いいえ"},
@@ -33,11 +30,8 @@ document.addEventListener('DOMContentLoaded', () => {
             'restart_btn': 'Try Again',
             'nickname_alert': 'Please enter a nickname.',
             'nickname_alert_alphabet': 'Nickname must be alphabet characters only.',
-            // ▼▼▼ 追加 ▼▼▼
             'print_wait_text': 'Please wait until printing is complete',
-            // ▲▲▲
             'questions': [
-                // (質問は変更なし)
                 {"text": "Do you prefer to plan things out\nbefore taking action?", "type": "personality", "yes_text": "Yes", "no_text": "No"},
                 {"text": "Do you prefer quiet time alone\nover lively social gatherings?", "type": "personality", "yes_text": "Yes", "no_text": "No"},
                 {"text": "Do you prefer supporting from the sidelines\nrather than being in the spotlight?", "type": "personality", "yes_text": "Yes", "no_text": "No"},
@@ -66,15 +60,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const uiTitle = document.getElementById('ui-title');
     const uiDescription = document.getElementById('ui-description');
     const uiLoadingText = document.getElementById('ui-loading-text');
-    // ▼▼▼ 追加 ▼▼▼
     const uiPrintWaitText = document.getElementById('ui-print-wait-text');
-    // ▲▲▲
 
     // 言語ボタン
     const langBtnJa = document.getElementById('lang-btn-ja');
     const langBtnEn = document.getElementById('lang-btn-en');
 
-    // 3. 状態変数 (変更なし)
+    // 3. 状態変数
     let currentQuestionIndex = 0;
     let currentLang = 'ja'; 
     let user_data = { "lang": currentLang, "nickname": "", "explicit": [], "implicit": [] };
@@ -103,17 +95,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // 結果画面
         restartBtn.textContent = t.restart_btn;
-        // ▼▼▼ 追加 ▼▼▼
         uiPrintWaitText.textContent = t.print_wait_text;
-        // ▲▲▲
     }
 
-    // 5. 言語ボタンのイベントリスナー (変更なし)
+    // 5. 言語ボタンのイベントリスナー
     langBtnJa.addEventListener('click', () => updateUIText('ja'));
     langBtnEn.addEventListener('click', () => updateUIText('en'));
 
 
-    // (startBtn.addEventListener ... 以下の残りのコードは変更なし)
     startBtn.addEventListener('click', () => {
         const nickname = nicknameInput.value.trim();
         

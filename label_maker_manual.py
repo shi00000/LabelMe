@@ -3,19 +3,16 @@ from PIL import Image, ImageDraw, ImageFont, ImageOps
 import time
 from ai_generator_api import MARK_DEFINITIONS
 
-# ▼▼▼【ここから修正】▼▼▼
-# draw_text_with_wrap 関数を大幅に改善
 def draw_text_with_wrap(draw, text, position, font, max_width, line_spacing, fill="black", lang="ja"):
     x, y = position
     lines = []
     
-    # 句読点の問題を修正 (Request 3)
     if lang == 'ja':
         text_to_wrap = text.strip().replace(',', '、')
     else:
-        text_to_wrap = text.strip() # 英語のコンマを保持
+        text_to_wrap = text.strip() 
 
-    # 英語のワードラップに対応 (Request 2)
+    # 英語のワードラップに対応
     if lang == 'en':
         words = text_to_wrap.split(' ')
         current_line = ""
@@ -57,7 +54,7 @@ def draw_text_with_wrap(draw, text, position, font, max_width, line_spacing, fil
             if line_width <= max_width:
                 current_line = test_line
             else:
-                # 1単語が長すぎて行に入らない場合 (あまりないはずだが)
+                # 1単語が長すぎて行に入らない場合
                 if not current_line and line_width > max_width:
                      lines.append(word) # 強制的に追加
                      current_line = ""
@@ -111,7 +108,6 @@ def draw_text_with_wrap(draw, text, position, font, max_width, line_spacing, fil
         # 描画した行の高さ + 行間
         current_y += line_height + line_spacing 
     return current_y
-# ▲▲▲【ここまで修正】▲▲▲
 
 
 def create_label(ai_results):
@@ -133,7 +129,6 @@ def create_label(ai_results):
     draw = ImageDraw.Draw(label)
     base_dir = os.path.dirname(os.path.abspath(__file__))
 
-    # (フォントロード部分は変更なし)
     try:
         font_path = "/System/Library/Fonts/ヒラギノ角ゴシック W6.ttc"
         font_body = ImageFont.truetype(font_path, size=32 * scale)
@@ -151,7 +146,6 @@ def create_label(ai_results):
             font_body = ImageFont.load_default(size=32 * scale)
             font_header = ImageFont.load_default(size=40 * scale)
 
-    # (ロゴ用フォントのロードも変更なし)
     font_logo = None
     logo_font_size = 180 * scale
     font_options = [
@@ -187,7 +181,6 @@ def create_label(ai_results):
         bg_image = ImageOps.fit(ai_results["image"], (front_panel_width, high_res_height), Image.Resampling.LANCZOS)
         label.paste(bg_image, (0, 0))
 
-    # (ロゴ描画ロジックは変更なし)
     nickname = ai_results.get("nickname", "WATASHI")
     logo_text_top = nickname.upper() 
     logo_text_bottom = "CIDER"
@@ -220,7 +213,6 @@ def create_label(ai_results):
     draw.text((logo_bottom_x, logo_bottom_y), logo_text_bottom, font=font_logo, fill="white")
     
     # --- 背表紙 (Spine) ---
-    # (変更なし)
     try:
         barcode_path = os.path.join(base_dir, "assets", "icons", "barcode.png")
         barcode_img = Image.open(barcode_path).convert("RGBA")
@@ -242,7 +234,6 @@ def create_label(ai_results):
     
     
     # --- 裏面 (Back Panel) ---
-    # (マーク描画は変更なし)
     mark_size = 170 * scale
     mark_area_width = mark_size + padding
     back_panel_padding = 10 * scale
@@ -271,7 +262,7 @@ def create_label(ai_results):
     except Exception as e:
         print(f"labelme_mark.png の読み込み中にエラーが発生しました: {e}")
 
-    # ▼▼▼ 裏面見出しの多言語対応 (既存) ▼▼▼
+    # 裏面見出しの多言語対応
     ad_copy_x = back_panel_x_start + back_panel_padding
     ad_copy_max_width = effective_width - ad_copy_x - mark_area_width - back_panel_padding
     
@@ -289,7 +280,7 @@ def create_label(ai_results):
     draw.text((ad_copy_x, back_panel_padding+20), header_secret , font=font_header, fill="black")
     ad_copy_end_y = 0
     if ai_results.get("ad_copy"):
-        # ▼▼▼ 修正: lang=lang を渡す ▼▼▼
+        
         ad_copy_end_y = draw_text_with_wrap(
             draw, ai_results["ad_copy"], 
             (ad_copy_x, back_panel_padding + 70*scale), 
@@ -300,7 +291,7 @@ def create_label(ai_results):
     if ai_results.get("precautions") and ad_copy_end_y > 0:
         precautions_start_y = ad_copy_end_y + 20 * scale 
         draw.text((ad_copy_x, precautions_start_y), header_precautions, font=font_header, fill="black")
-        # ▼▼▼ 修正: lang=lang を渡す ▼▼▼
+        
         draw_text_with_wrap(
             draw, ai_results["precautions"],
             (ad_copy_x, precautions_start_y + 70*scale),
@@ -316,7 +307,6 @@ def create_label(ai_results):
     if ai_results.get("components"):
         component_y_start = bottom_section_start_y + 60 * scale
         
-        # ▼▼▼【ここから修正】(Request 1) ▼▼▼
         if lang == 'en':
             # 英語は長いため列幅を広げる
             column_width = 280 * scale
@@ -338,7 +328,7 @@ def create_label(ai_results):
         components_items = list(ai_results["components"].items())
         
         for i, (name_ja, value) in enumerate(components_items):
-            # ▼▼▼ 修正: 辞書からマッピングした名前を使う ▼▼▼
+            
             name_display = component_name_map.get(name_ja, name_ja)
             
             col = i // 3 # 0, 0, 0, 1, 1, 1
@@ -349,8 +339,6 @@ def create_label(ai_results):
             line = f"{name_display}: {value}%"
             draw.text((current_x, current_y), line, font=font_body, fill="black")
 
-    # ▼▼▼ 修正: materials_x の開始位置を、変更された column_width に基づいて計算 ▼▼▼
-    # (2列分の幅 + 少しのパディング)
     materials_x = components_x + (2 * column_width) + (20 * scale) 
     
     draw.text((materials_x, bottom_section_start_y), header_materials, font=font_header, fill="black")
@@ -358,17 +346,16 @@ def create_label(ai_results):
         materials_max_width = effective_width - materials_x - padding
         
         if materials_max_width > 0:
-            # ▼▼▼ 修正: lang=lang を渡す ▼▼▼
             draw_text_with_wrap(draw, ai_results["materials"],
                                 (materials_x, bottom_section_start_y + 60*scale),
                                 font_body, max_width=materials_max_width, line_spacing=20*scale,
                                 lang=lang
             )
-    # ▲▲▲【ここまで修正】▲▲▲
+
 
     final_label_image = label.resize((final_label_width, final_label_height), Image.Resampling.LANCZOS)
     
-    # (枠線描画、マージン追加、保存処理は変更なし)
+
     border_width = 5 
     draw_final = ImageDraw.Draw(final_label_image)
     draw_final.rectangle((0, 0, final_label_width - 1, border_width - 1), fill="black")

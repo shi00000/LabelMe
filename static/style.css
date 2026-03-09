@@ -16,17 +16,16 @@ body, html {
     text-align: center;
 }
 
-/* #start-container, #quiz-containerなどの共通スタイル */
+
 #start-container, #quiz-container, #loading-container, #result-container {
     padding: 2rem;
     background: white;
     border-radius: 16px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    /* ▼▼▼ 追加: コンテナ自体の位置を調整 ▼▼▼ */
     position: relative;
 }
 
-/* スタート画面の個別スタイル */
+
 #start-container h1 {
     font-size: 3rem;
     color: #007aff;
@@ -39,7 +38,7 @@ body, html {
     margin-bottom: 2.5rem;
 }
 
-/* --- ニックネーム入力欄のスタイル --- */
+
 #nickname-input {
     font-size: 1.2rem;
     padding: 0.8rem;
@@ -49,13 +48,12 @@ body, html {
     border: 2px solid #ddd;
     border-radius: 8px;
     text-align: center;
-    box-sizing: border-box; /* パディングを含めて幅を計算 */
+    box-sizing: border-box; 
 }
 #nickname-input:focus {
     border-color: #007aff;
     outline: none;
 }
-/* --- ここまで --- */
 
 
 #start-btn {
@@ -76,7 +74,6 @@ body, html {
     display: flex; 
     align-items: center;
     justify-content: center;
-    /* ▼▼▼ 追加: 改行されても中央揃えにする ▼▼▼ */
     text-align: center;
 }
 
@@ -139,7 +136,6 @@ button:hover {
     color: white;
 }
 
-/* --- ▼▼▼ 多言語対応で追加したボタンCSS ▼▼▼ --- */
 #lang-btn-container {
     position: absolute;
     top: 1.5rem;
@@ -165,14 +161,9 @@ button:hover {
     font-weight: bold;
 }
 
-/* (既存のCSSの末尾に追加) */
-
 #ui-print-wait-text {
     font-size: 1.1rem;
     color: #333;
     margin-bottom: 1.5rem;
     font-weight: 500;
 }
-/* --- ここまで --- */
-
-/* (※※※ あの余分な "}" は削除済みです ※※※) */
